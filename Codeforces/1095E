@@ -26,6 +26,7 @@ void build(int idx, int l, int r)
             segtree[idx].match = 0;
         }
         return;
+        //aaaaa
     }
     int mid = (l+r) / 2;
     build(idx*2,l,mid);

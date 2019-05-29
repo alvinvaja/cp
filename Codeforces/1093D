@@ -13,6 +13,7 @@ void dfs(int node, int prev)
             odd++;
         jml++;
     }
+    
     visited[node] = 1;
     int i,temp;
     for(i=0;i<vi[node].size();i++)
