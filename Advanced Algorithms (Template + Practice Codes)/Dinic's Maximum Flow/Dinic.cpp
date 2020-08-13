@@ -1,9 +1,9 @@
 // Dinic's Maximum Flow Template by cp-algorithms
 
 struct FlowEdge {
-    int v, u;
+    int u, v;
     long long cap, flow = 0;
-    FlowEdge(int v, int u, long long cap) : v(v), u(u), cap(cap) {}
+    FlowEdge(int u, int v, long long cap) : u(u), v(v),  cap(cap) {}
 };
 
 struct Dinic {
@@ -21,41 +21,41 @@ struct Dinic {
         ptr.resize(n);
     }
 
-    void addEdge(int v, int u, long long cap) {
-        edges.emplace_back(v, u, cap);
-        edges.emplace_back(u, v, 0);
-        adj[v].push_back(m);
-        adj[u].push_back(m + 1);
+    void addEdge(int u, int v, long long cap) {
+        edges.emplace_back(u, v, cap);
+        edges.emplace_back(v, u, 0);
+        adj[u].push_back(m);
+        adj[v].push_back(m + 1);
         m += 2;
     }
 
     bool bfs() {
         while (!q.empty()) {
-            int v = q.front();
+            int u = q.front();
             q.pop();
-            for (int id : adj[v]) {
+            for (int id : adj[u]) {
                 if (edges[id].cap - edges[id].flow < 1)
                     continue;
-                if (level[edges[id].u] != -1)
+                if (level[edges[id].v] != -1)
                     continue;
-                level[edges[id].u] = level[v] + 1;
-                q.push(edges[id].u);
+                level[edges[id].v] = level[u] + 1;
+                q.push(edges[id].v);
             }
         }
         return level[t] != -1;
     }
 
-    long long dfs(int v, long long pushed) {
+    long long dfs(int u, long long pushed) {
         if (pushed == 0)
             return 0;
-        if (v == t)
+        if (u == t)
             return pushed;
-        for (int& cid = ptr[v]; cid < (int)adj[v].size(); cid++) {
-            int id = adj[v][cid];
-            int u = edges[id].u;
-            if (level[v] + 1 != level[u] || edges[id].cap - edges[id].flow < 1)
+        for (int& cid = ptr[u]; cid < (int)adj[u].size(); cid++) {
+            int id = adj[u][cid];
+            int v = edges[id].v;
+            if (level[u] + 1 != level[v] || edges[id].cap - edges[id].flow < 1)
                 continue;
-            long long tr = dfs(u, min(pushed, edges[id].cap - edges[id].flow));
+            long long tr = dfs(v, min(pushed, edges[id].cap - edges[id].flow));
             if (tr == 0)
                 continue;
             edges[id].flow += tr;
